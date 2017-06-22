@@ -1,10 +1,10 @@
-import axios from 'axios'
+import axios from '@/modules/axios'
 import querystring from 'querystring'
 
 function login (username, password) {
   return new Promise((resolve, reject) => {
     axios
-      .post('http://localhost:3000/auth/login', querystring.stringify({
+      .post('/auth/login', querystring.stringify({
         username,
         password
       }))
@@ -19,4 +19,16 @@ function login (username, password) {
   })
 }
 
-export default { login }
+function register (user) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post('/auth/register', querystring.stringify({
+        username: user.username,
+        password: user.password
+      }))
+
+      .then(resolve)
+      .catch(reject)
+  })
+}
+export default { login, register }
