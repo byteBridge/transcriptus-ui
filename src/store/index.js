@@ -8,8 +8,8 @@ const state = {
 }
 
 const mutations = {
-  login (state, payload) {
-    state.authenticatedUser = payload.user
+  login (state, user) {
+    state.authenticatedUser = user
   },
 
   logout (state) {
@@ -17,9 +17,15 @@ const mutations = {
   }
 }
 
+const getters = {
+  authenticatedUser (state) {
+    return state.authenticatedUser
+  }
+}
 const store = new Vuex.Store({
   state,
-  mutations
+  mutations,
+  getters
 })
 
 export default store
