@@ -1,9 +1,15 @@
 <template>
   <div>
        <div class="ui container stackable grid">
-         <div class="six wide column">
+          <div class="six wide column">
+
            <h3 class="ui center aligned header">Sign in</h3>
            
+            <div class="ui red segment" v-if="error">
+              <i class="red warning sign icon"></i>{{error}}
+              <button class="ui right floated circular icon mini button" @click="error = ''"> 
+              <i class="red remove icon"></i></button>
+             </div>
 
            <!--login playground where the username and password are entered -->
            <div class="ui teal segment">
@@ -36,8 +42,8 @@
          </div>
 
          <!--link to the registration view -->
-         <div class="ui segment">
-           Don't have an account? <a href="#">Sign in here</a>
+         <div class="ui segment" id="register">
+           Don't have an account? <router-link to="/register">Sign up here</router-link>
          </div>
 
        </div>
@@ -47,11 +53,16 @@
 
 <script>
   import users from '../modules/users'
+  import $ from 'jquery'
+  window.$ = $
+
   export default {
     data () {
       return {
         username: '',
-        password: ''
+        password: '',
+        error: '',
+        authenticatedUser: this.auth
       }
     },
 
@@ -59,10 +70,12 @@
       login () {
         users.login(this.username, this.password)
           .then(response => {
-            alert(response)
+            this.$store.commit('login', this.username)
+            localStorage.setItem('token', response.data.token)
+            this.$router.push({ path: '/secret' })
           })
           .catch(error => {
-            alert(error)
+            this.error = error.response ? error.response.data.error : 'We are having trouble logging you in. Could you check your internet connection.'
           })
       }
     }
